@@ -13,18 +13,13 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+// $router->get('/key', function() {
+//     return \Illuminate\Support\Str::random(32);
+// });
 
-
-$router->group(['prefix' => ''], function () use ($router){
+$router->group(['prefix' => ''], function () use ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
-    $router->post('forgot-password', 'AuthController@forgot-password');
-    $router->post('recovery-password', 'AuthController@recovery-password');
-});
-
-$router->group(['prefix' => 'dashboard'], function () use ($router){
-    $router->post('', 'DashboardController@register');
+    $router->post('forgot-password', 'AuthController@forgotPassword');
+    $router->post('recovery-password', 'AuthController@recoveryPassword');
 });

@@ -1,29 +1,60 @@
 <?php
 namespace App\Services;
 
-use App\Repositories\User\UserRepository;
+use Illuminate\Http\Response;
 
 class AuthService
 {
-    protected $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+   /**
+     * Get a JWT via given credentials.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function login(array $request): Array
     {
-        $this->userRepository = $userRepository;
+        $credentials = [
+            'email' => $request['email'],
+            'password' => $request['password']
+        ];
+
+        //Attempt to login checking user info
+        $token = auth()->attempt($credentials);
+        
+        //If token found, proceed
+        if($token){
+            return [
+                'code' => Response::HTTP_OK,
+                'status' => 'success',
+                'message' => 'You have successfully logged in.',
+                'data'=> $this->buildTokenInfo($token)
+            ];
+        }
+        //Returns unauthorized if credentials do not match
+        return [
+            'code'=> Response::HTTP_UNAUTHORIZED,
+            'status' => 'error',
+            'message' => 'You have entered an invalid email or password.',
+            'data' => null
+        ];
     }
 
-   public function login($request)
-   {
-        $credentials = [
-            'name' => $request['email'],
-            'email' => $request['password']
-        ];
 
-        return $data = [
-            'token' => 'dawdawdwakjdpiojPIOSJo92jpe2nemp2'
+    /**
+     * Gets the token array structure
+     *
+     * @param string $token
+     * @return array
+     */
+    public function buildTokenInfo(string $token): Array
+    {
+        return [
+            'access_token' => $token,
+            'token_type'   => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
         ];
-      
-       // return $this->userRepository->create($user);
-   }
+    }
+
    
 }

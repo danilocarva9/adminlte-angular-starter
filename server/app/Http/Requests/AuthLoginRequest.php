@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Requests;
 
-class UserLoginRequest extends FormRequest
+class AuthLoginRequest extends FormRequest
 {
     public function authorize()
     {

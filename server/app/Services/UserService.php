@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Http\Response;
 use App\Repositories\User\UserRepository;
 
 class UserService
@@ -13,14 +14,22 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-   public function create($request): User
+   public function create(array $request): Array
    {
-        $user = [
+        $request = [
             'name' => $request['name'],
             'email' => $request['email'], 
             'password' => app('hash')->make($request['password'])
         ];
-        return $this->userRepository->create($user);
+
+        $user = $this->userRepository->create($request);
+
+        return [
+            'code' => Response::HTTP_CREATED,
+            'status' => 'success',
+            'message' => 'Your account was created successfuly.',
+            'data'=> $user
+        ];
    }
    
 }

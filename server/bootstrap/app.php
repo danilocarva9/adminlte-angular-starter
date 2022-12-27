@@ -22,7 +22,11 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
+
 $app->withFacades();
+
+//Enabled it because of the bellow warning:
+//"Presence verifier has not been set exception on validator rule exists"
 $app->withEloquent();
 
 /*
@@ -58,6 +62,11 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('cors');
+
+//Register JWT 
+//$app->configure('jwt');
+//$app->configure('auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -74,9 +83,13 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->middleware([
+    Fruitcake\Cors\HandleCors::class,
+]);
+
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -90,7 +103,9 @@ $app->configure('app');
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Fruitcake\Cors\CorsServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*

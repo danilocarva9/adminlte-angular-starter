@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserLoginRequest;
-use App\Services\UserService;
 use App\Services\AuthService;
+use App\Services\UserService;
 use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\AuthLoginRequest;
 use App\Http\Responses\ApiSuccessResponse;
 use App\Http\Responses\ApiErrorResponse;
 use Illuminate\Http\Response;
 use Throwable;
-
 
 class AuthController extends Controller
 {
@@ -19,7 +18,7 @@ class AuthController extends Controller
     protected $authService;
 
     /**
-     * Create a new controller instance.
+     * Create new controller instance
      *
      * @return void
      */
@@ -32,9 +31,7 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    
-
-     /**
+    /**
      * Register new user.
      *
      * @param Request $request
@@ -43,11 +40,12 @@ class AuthController extends Controller
     public function register(UserStoreRequest $request)
     {
         try {
-            $user = $this->userService->create($request->all());
+            $response = $this->userService->create($request->all());
             return new ApiSuccessResponse(
-                $user,
-                ['message' => 'User was created successfully'],
-                Response::HTTP_CREATED
+                $response['code'],
+                $response['status'],
+                $response['message'],
+                $response['data']
             );
         } catch(Throwable $exception) {
             return new ApiErrorResponse(
@@ -57,32 +55,54 @@ class AuthController extends Controller
         }
     }
 
-
-
-     /**
+    /**
      * User login.
      *
      * @param Request $request
      * @return Response
      */
-    public function login(UserLoginRequest $request)
+    public function login(AuthLoginRequest $request)
     {
         try {
             $credentials = $request->get(['email', 'password']);
-            $token = $this->authService->login($credentials);
+            $response = $this->authService->login($credentials);
             return new ApiSuccessResponse(
-                $data,
-                ['message' => 'Logged successfuly'],
-                Response::HTTP_OK
+                $response['code'],
+                $response['status'],
+                $response['message'],
+                $response['data']
             );
         } catch(Throwable $exception) {
             return new ApiErrorResponse(
-                'An error occurred while trying to loggin',
+                'An error occurred while performing the request.',
                 $exception
             );
         }
     }
 
 
-    
+    /**
+     * User forgot password.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function forgotPassword()
+    {
+
+    }
+
+
+     /**
+     * User recovery password.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function recoveryPassword()
+    {
+
+    }
+
+
 }

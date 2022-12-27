@@ -8,15 +8,17 @@ use Illuminate\Http\Response;
 class ApiSuccessResponse implements Responsable
 {
     /**
-     * @param  mixed  $data
-     * @param  array  $metadata
      * @param  int  $code
+     * @param string $status
+     * @param  mixed  $message
+     * @param  mixed  $data
      * @param  array  $headers
      */
     public function __construct(
-        private mixed $data,
-        private array $metadata,
         private int $code = Response::HTTP_OK,
+        private string $status = 'success',
+        private mixed $message = null,
+        private mixed $data = null,
         private array $headers = []
     ) {}
 
@@ -28,8 +30,9 @@ class ApiSuccessResponse implements Responsable
     {
         return response()->json(
             [
+                'status' => $this->status,
+                'message'=> $this->message,
                 'data' => $this->data,
-                'metadata' => $this->metadata,
             ],
             $this->code,
             $this->headers
