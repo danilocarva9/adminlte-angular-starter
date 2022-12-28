@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Services\AuthService;
 use App\Services\UserService;
 use App\Http\Requests\UserStoreRequest;
-use App\Http\Requests\AuthLoginRequest;
+use App\Http\Requests\Auth\AuthLoginRequest;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\RecoveryPasswordRequest;
 use App\Http\Responses\ApiSuccessResponse;
 use App\Http\Responses\ApiErrorResponse;
 use Illuminate\Http\Response;
@@ -43,9 +45,7 @@ class AuthController extends Controller
             $response = $this->userService->create($request->all());
             return new ApiSuccessResponse(
                 $response['code'],
-                $response['status'],
-                $response['message'],
-                $response['data']
+                $response['content']
             );
         } catch(Throwable $exception) {
             return new ApiErrorResponse(
@@ -68,9 +68,7 @@ class AuthController extends Controller
             $response = $this->authService->login($credentials);
             return new ApiSuccessResponse(
                 $response['code'],
-                $response['status'],
-                $response['message'],
-                $response['data']
+                $response['content']
             );
         } catch(Throwable $exception) {
             return new ApiErrorResponse(
@@ -87,9 +85,21 @@ class AuthController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function forgotPassword()
+    public function forgotPassword(ForgotPasswordRequest $request)
     {
-
+        try {
+            $email = $request->get('email');
+            $response = $this->authService->forgotPassword($email);
+            return new ApiSuccessResponse(
+                $response['code'],
+                $response['content']
+            );
+        } catch(Throwable $exception) {
+            return new ApiErrorResponse(
+                'An error occurred while performing the request.',
+                $exception
+            );
+        }
     }
 
 
@@ -99,9 +109,20 @@ class AuthController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function recoveryPassword()
+    public function recoveryPassword(RecoveryPasswordRequest $request)
     {
-
+        try {
+            $response = $this->authService->recoveryPassword($request->all());
+            return new ApiSuccessResponse(
+                $response['code'],
+                $response['content']
+            );
+        } catch(Throwable $exception) {
+            return new ApiErrorResponse(
+                'An error occurred while performing the request.',
+                $exception
+            );
+        }
     }
 
 

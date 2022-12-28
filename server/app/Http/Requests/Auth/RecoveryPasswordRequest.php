@@ -1,7 +1,9 @@
 <?php
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
-class AuthLoginRequest extends FormRequest
+use App\Http\Requests\FormRequest;
+
+class RecoveryPasswordRequest extends FormRequest
 {
     public function authorize()
     {
@@ -11,8 +13,7 @@ class AuthLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required|confirmed'
         ];
     }
 

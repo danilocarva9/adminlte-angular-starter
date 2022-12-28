@@ -26,10 +26,13 @@ class UserService
 
         return [
             'code' => Response::HTTP_CREATED,
-            'status' => 'success',
-            'message' => 'Your account was created successfuly.',
-            'data'=> $user
+            'content' => [
+                'status' => 'success',
+                'message' => 'Your account was created successfuly.',
+                'data'=> $user
+            ]
         ];
    }
+
    
 }
