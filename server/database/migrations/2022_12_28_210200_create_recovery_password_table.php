@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('recovery_password', function (Blueprint $table) {
-            $table->id();
-            
+        Schema::create('recovery_passwords', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('encryption');
+            $table->boolean('is_active')->default(true);
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

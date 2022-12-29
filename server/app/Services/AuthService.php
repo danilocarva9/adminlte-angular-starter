@@ -1,22 +1,29 @@
 <?php
 namespace App\Services;
 
-use App\Repositories\User\UserRepository;
+use App\Repositories\RecoveryPasswordRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthService
 {
 
     private $userRepository;
 
-      /**
-     * Create new controller instance
+     /**
+     * Create new service instance
      *
      * @return void
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(
+        UserRepository $userRepository,
+        RecoveryPasswordRepository $recoveryPasswordRepository
+    )
     {
         $this->userRepository = $userRepository;
+        $this->recoveryPasswordRepository = $recoveryPasswordRepository;
     }
 
    /**
@@ -37,14 +44,11 @@ class AuthService
         
         //If token found, proceed
         if($token){
-            return [
-                'code' => Response::HTTP_OK,
-                'content' => [
-                    'status' => 'success',
-                    'message' => 'You have successfully logged in.',
-                    'data'=> $this->buildTokenInfo($token)
-                ]
-            ];
+           return [
+            'access_token' => $token,
+            'token_type'   => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+           ];
         }
         //Returns unauthorized if credentials do not match
         return [
@@ -69,14 +73,28 @@ class AuthService
         // Send if exits the user with this email
         // send email to the user with a link with HASH to the
         // recovery-password where the user is going to fill new password and save
-        return [
-            'code'=> Response::HTTP_OK,
-            'content' => [
-                'status' => 'success',
-                'message' => 'An email was sent to you with the instruction to recovery your password.',
-                'data' => null
-            ]
-        ];
+
+        $user = $this->userRepository->findBy('email', $email);
+       
+        if(isset($user)){
+
+            $recoveryPassword = [
+                'encryption' => base64_encode(Hash::make($user['id'])),
+                'is_active' => true,
+                'user_id' => $user->id
+            ];
+            $response = $this->recoveryPasswordRepository->create($recoveryPassword);
+
+            if(isset($response)){
+                $emailBody = '';
+                //$emailResponse = $this->mailService->send($user['email'], $emailBody);
+                $emailResponse = true;
+            }
+            if($emailResponse){
+                return [ 'message' => "We've sent an email with instructions to recovery your password." ];
+            }
+        }
+
     }
 
 
@@ -92,7 +110,7 @@ class AuthService
             'password' => app('hash')->make($request['password'])
         ];
 
-        $response = $this->userRepository->update($newPassword, 37);
+        $response = $this->userRepository->updateBy($newPassword, 37);
 
         if($response){
             return [

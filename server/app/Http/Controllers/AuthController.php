@@ -44,18 +44,9 @@ class AuthController extends Controller
     {
         try {
             $response = $this->userService->create($request->all());
-            // return new ApiSuccessResponse(
-            //     $response['code'],
-            //     $response['content']
-            // );
-             return \ApiResponse::created($response);
-             
+            return \ApiResponse::created($response);
         } catch(Throwable $exception) {
             return \ApiResponse::failed($exception);
-            // return new ApiErrorResponse(
-            //     'An error occurred while trying to create the user',
-            //     $exception
-            // );
         }
     }
 
@@ -70,10 +61,7 @@ class AuthController extends Controller
         try {
             $credentials = $request->get(['email', 'password']);
             $response = $this->authService->login($credentials);
-            return new ApiSuccessResponse(
-                $response['code'],
-                $response['content']
-            );
+            return \ApiResponse::httpCode(200)->message('Succesful logged in.')->data($response)->success();
         } catch(Throwable $exception) {
             return new ApiErrorResponse(
                 'An error occurred while performing the request.',
@@ -94,15 +82,9 @@ class AuthController extends Controller
         try {
             $email = $request->get('email');
             $response = $this->authService->forgotPassword($email);
-            return new ApiSuccessResponse(
-                $response['code'],
-                $response['content']
-            );
+            return \ApiResponse::success($response['message']);
         } catch(Throwable $exception) {
-            return new ApiErrorResponse(
-                'An error occurred while performing the request.',
-                $exception
-            );
+            return \ApiResponse::failed($exception);
         }
     }
 

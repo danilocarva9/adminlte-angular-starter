@@ -3,7 +3,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Http\Response;
-use App\Repositories\User\UserRepository;
+use App\Repositories\UserRepository;
 
 class UserService
 {

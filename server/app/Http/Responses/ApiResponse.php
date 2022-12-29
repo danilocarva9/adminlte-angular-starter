@@ -39,12 +39,16 @@ class ApiResponse
      *
      * @throws \BadMethodCallException
      */
-    public function success()
+    public function success($message = null)
     {
         $this->status = 'success';
 
         if (!isset($this->payload['http_code'])) {
             $this->http_code = 200;
+        }
+
+        if($message){
+            $this->message = $message;
         }
 
         if (!isset($this->payload['message'])) {
