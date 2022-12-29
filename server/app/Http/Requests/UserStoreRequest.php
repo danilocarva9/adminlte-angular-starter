@@ -17,6 +17,13 @@ class UserStoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+       return [ 
+        'email.required' => 'adadada'
+       ];
+    }
+
     public function prepareForValidation()
     {
        

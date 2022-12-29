@@ -14,7 +14,7 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-   public function create(array $request): Array
+   public function create(array $request): User
    {
         $request = [
             'name' => $request['name'],
@@ -22,16 +22,7 @@ class UserService
             'password' => app('hash')->make($request['password'])
         ];
 
-        $user = $this->userRepository->create($request);
-
-        return [
-            'code' => Response::HTTP_CREATED,
-            'content' => [
-                'status' => 'success',
-                'message' => 'Your account was created successfuly.',
-                'data'=> $user
-            ]
-        ];
+        return $this->userRepository->create($request);
    }
 
    

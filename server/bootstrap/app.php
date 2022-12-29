@@ -23,7 +23,10 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-$app->withFacades();
+
+$app->withFacades(true, [
+    App\Facades\ApiResponseFacade::class => 'ApiResponse'
+]);
 
 //Enabled it because of the bellow warning:
 //"Presence verifier has not been set exception on validator rule exists"
@@ -107,6 +110,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Fruitcake\Cors\CorsServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\ApiResponseServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

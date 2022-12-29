@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('recovery_password', function (Blueprint $table) {
             $table->id();
+            
             $table->timestamps();
         });
     }

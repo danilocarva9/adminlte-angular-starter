@@ -10,6 +10,7 @@ use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\RecoveryPasswordRequest;
 use App\Http\Responses\ApiSuccessResponse;
 use App\Http\Responses\ApiErrorResponse;
+//use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Response;
 use Throwable;
 
@@ -43,15 +44,18 @@ class AuthController extends Controller
     {
         try {
             $response = $this->userService->create($request->all());
-            return new ApiSuccessResponse(
-                $response['code'],
-                $response['content']
-            );
+            // return new ApiSuccessResponse(
+            //     $response['code'],
+            //     $response['content']
+            // );
+             return \ApiResponse::created($response);
+             
         } catch(Throwable $exception) {
-            return new ApiErrorResponse(
-                'An error occurred while trying to create the user',
-                $exception
-            );
+            return \ApiResponse::failed($exception);
+            // return new ApiErrorResponse(
+            //     'An error occurred while trying to create the user',
+            //     $exception
+            // );
         }
     }
 
