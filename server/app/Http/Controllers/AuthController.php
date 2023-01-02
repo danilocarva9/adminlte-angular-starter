@@ -8,9 +8,6 @@ use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\Auth\AuthLoginRequest;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\RecoveryPasswordRequest;
-use App\Http\Responses\ApiSuccessResponse;
-use App\Http\Responses\ApiErrorResponse;
-//use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Response;
 use Throwable;
 
@@ -61,12 +58,12 @@ class AuthController extends Controller
         try {
             $credentials = $request->get(['email', 'password']);
             $response = $this->authService->login($credentials);
-            return \ApiResponse::httpCode(200)->message('Succesful logged in.')->data($response)->success();
+            if($response['httpCode'] == Response::HTTP_OK){
+                return \ApiResponse::httpCode($response['httpCode'])->message('You have successfully logged in.')->data($response['data'])->success();
+            }
+            return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
         } catch(Throwable $exception) {
-            return new ApiErrorResponse(
-                'An error occurred while performing the request.',
-                $exception
-            );
+            return \ApiResponse::failed($exception);
         }
     }
 
@@ -82,12 +79,14 @@ class AuthController extends Controller
         try {
             $email = $request->get('email');
             $response = $this->authService->forgotPassword($email);
-            return \ApiResponse::success($response['message']);
+            if($response['httpCode'] == Response::HTTP_OK){
+                return \ApiResponse::success($response['message']);
+            }
+            return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
         } catch(Throwable $exception) {
             return \ApiResponse::failed($exception);
         }
     }
-
 
      /**
      * User recovery password.
@@ -99,15 +98,12 @@ class AuthController extends Controller
     {
         try {
             $response = $this->authService->recoveryPassword($request->all());
-            return new ApiSuccessResponse(
-                $response['code'],
-                $response['content']
-            );
+            if($response['httpCode'] == Response::HTTP_OK){
+                return \ApiResponse::success($response['message']);
+            }
+            return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
         } catch(Throwable $exception) {
-            return new ApiErrorResponse(
-                'An error occurred while performing the request.',
-                $exception
-            );
+            return \ApiResponse::failed($exception);
         }
     }
 

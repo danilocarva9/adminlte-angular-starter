@@ -35,7 +35,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function recoverypassword()
     {
-        return $this->hasMany(RecoveryPassword::class);
+        return $this->hasOne(RecoveryPassword::class);
     }
 
     /**

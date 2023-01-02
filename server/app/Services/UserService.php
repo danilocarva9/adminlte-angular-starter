@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Http\Response;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -19,9 +20,8 @@ class UserService
         $request = [
             'name' => $request['name'],
             'email' => $request['email'], 
-            'password' => app('hash')->make($request['password'])
+            'password' => Hash::make($request['password'])
         ];
-
         return $this->userRepository->create($request);
    }
 
