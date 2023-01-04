@@ -25,7 +25,8 @@ $app = new Laravel\Lumen\Application(
 
 
 $app->withFacades(true, [
-    App\Facades\ApiResponseFacade::class => 'ApiResponse'
+    App\Facades\ApiResponseFacade::class => 'ApiResponse',
+    Illuminate\Support\Facades\Mail::class => 'Mail'
 ]);
 
 //Enabled it because of the bellow warning:
@@ -66,6 +67,7 @@ $app->singleton(
 
 $app->configure('app');
 $app->configure('cors');
+$app->configure('mail');
 
 //Register JWT 
 //$app->configure('jwt');
@@ -111,6 +113,21 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Fruitcake\Cors\CorsServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(App\Providers\ApiResponseServiceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+
+
+/*
+|--------------------------------------------------------------------------
+| Alias for email service
+|--------------------------------------------------------------------------
+|
+*/
+$app->alias('mail.manager', Illuminate\Mail\MailManager::class);
+$app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
+
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 
 /*
 |--------------------------------------------------------------------------

@@ -5,11 +5,14 @@ use App\Repositories\RecoveryPasswordRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use App\Services\EmailService;
 
 class AuthService
 {
 
     private $userRepository;
+    private $recoveryPasswordRepository;
+    private $emailService;
 
      /**
      * Create new service instance
@@ -18,11 +21,13 @@ class AuthService
      */
     public function __construct(
         UserRepository $userRepository,
-        RecoveryPasswordRepository $recoveryPasswordRepository
+        RecoveryPasswordRepository $recoveryPasswordRepository,
+        EmailService $emailService
     )
     {
         $this->userRepository = $userRepository;
         $this->recoveryPasswordRepository = $recoveryPasswordRepository;
+        $this->emailService = $emailService;
     }
 
    /**
@@ -53,7 +58,7 @@ class AuthService
 
 
     /**
-     * Get a JWT via given credentials.
+     * Forgot password.
      *
      * @param  Request  $request
      * @return Response
@@ -62,9 +67,11 @@ class AuthService
     {
         $user = $this->userRepository->findBy([['email', $email, '=']]);
 
-        if($user->recoveryPassword->is_active){
-            return ["httpCode"=> Response::HTTP_UNPROCESSABLE_ENTITY, 
-            "message" => "You already have requested to change your password, please check your inbox."];
+        if($user->recoveryPassword){
+            if($user->recoveryPassword->is_active){
+                return ["httpCode"=> Response::HTTP_UNPROCESSABLE_ENTITY, 
+                "message" => "You already have requested to change your password, please check your inbox."];
+            }
         }
       
         if($user){
@@ -84,14 +91,16 @@ class AuthService
         }
 
         if(isset($response)){
-            $emailBody = '';
+            $subject = "email subject";
             $urlPasswordBase64 = base64_encode($recoveryPassword['encryption']);
-            //$emailResponse = $this->mailService->send($user['email'], $emailBody);
-            $emailQueued = true;
+            $body = 'Body of thhe email: '.$urlPasswordBase64;
+            $this->emailService->handleRequest($user->email, $subject, $body);
         }
-        if($emailQueued){
-            return [ 'message' => "We've sent an email with instructions to recovery your password. = ".$urlPasswordBase64 ];
-        }
+
+       
+        // if($emailQueued){
+        //     return [ 'message' => "We've sent an email with instructions to recovery your password. = ".$urlPasswordBase64 ];
+        // }
     }
 
 
