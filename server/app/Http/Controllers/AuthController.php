@@ -55,16 +55,11 @@ class AuthController extends Controller
      */
     public function login(AuthLoginRequest $request)
     {
-        try {
-            $credentials = $request->get(['email', 'password']);
-            $response = $this->authService->login($credentials);
-            if($response['httpCode'] == Response::HTTP_OK){
-                return \ApiResponse::httpCode($response['httpCode'])->message('You have successfully logged in.')->data($response['data'])->success();
-            }
-            return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
-        } catch(Throwable $exception) {
-            return \ApiResponse::failed($exception);
+        $response = $this->authService->login($request->get(['email', 'password']));
+        if($response['httpCode'] == Response::HTTP_OK){
+            return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->data($response['data'])->success();
         }
+        return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
     }
 
 
@@ -76,16 +71,12 @@ class AuthController extends Controller
      */
     public function forgotPassword(ForgotPasswordRequest $request)
     {
-        try {
-            $email = $request->get('email');
-            $response = $this->authService->forgotPassword($email);
-            if($response['httpCode'] == Response::HTTP_OK){
-                return \ApiResponse::success($response['message']);
-            }
-            return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
-        } catch(Throwable $exception) {
-            return \ApiResponse::failed($exception);
+        
+        $response = $this->authService->forgotPassword($request->get('email'));
+        if($response['httpCode'] == Response::HTTP_OK){
+            return \ApiResponse::success($response['message']);
         }
+        return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
     }
 
      /**

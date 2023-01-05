@@ -22,9 +22,9 @@ class RecoveryPassword extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeActive($query)
+    public function scopeIsActive($query)
     {
-        return $query->where('is_active', '=', 1);
+        return $query->where('is_active', '=', 1)->value('is_active') ? true : false;
     }
 
 }

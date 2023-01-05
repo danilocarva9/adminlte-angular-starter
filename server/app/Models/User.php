@@ -38,6 +38,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasOne(RecoveryPassword::class);
     }
 
+
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

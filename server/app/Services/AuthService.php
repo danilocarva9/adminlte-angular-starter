@@ -36,24 +36,20 @@ class AuthService
      * @param  Request  $request
      * @return Response
      */
-    public function login(array $request): Array
+    public function login(array $credentials): Array
     {
-        $credentials = [
-            'email' => $request['email'],
-            'password' => $request['password']
-        ];
         //Attempt to login checking user info.
         $token = auth()->attempt($credentials);
         //If token found, proceed.
         if($token){
            return [
             'httpCode' => Response::HTTP_OK,
+            "message" => "You have successfully logged in.",
             'data'=> $this->buildTokenInfo($token)
            ];
         }
         //Returns unauthorized if credentials do not match
-        return ["httpCode"=> Response::HTTP_UNAUTHORIZED, 
-        "message" => "You have entered an invalid email or password."];
+        return ["httpCode"=> Response::HTTP_UNAUTHORIZED, "message" => "You have entered an invalid email or password."];
     }
 
 
@@ -67,42 +63,57 @@ class AuthService
     {
         $user = $this->userRepository->findBy([['email', $email, '=']]);
 
-        if($user->recoveryPassword){
-            if($user->recoveryPassword->is_active){
-                return ["httpCode"=> Response::HTTP_UNPROCESSABLE_ENTITY, 
-                "message" => "You already have requested to change your password, please check your inbox."];
-            }
+        //If user's does not exist.
+        if(is_null($user)) {
+            return ["httpCode"=> Response::HTTP_NOT_FOUND, "message" => "User not found."];
         }
-      
-        if($user){
-            $recoveryPassword = [
-                'encryption' => Hash::make($user->id),
-                'is_active' => true,
-                'user_id' => $user->id
-            ];
-           
-            //If recovery for the user does not exist, create new one.
-            if(is_null($user->recoveryPassword)){
-                $response = $this->recoveryPasswordRepository->create($recoveryPassword);
-            }else{
-                unset($recoveryPassword['user_id']);
-                $response = $this->recoveryPasswordRepository->updateBy($recoveryPassword, $user->recoveryPassword->id);
-            }
-        }
-
-        if(isset($response)){
-            $subject = "email subject";
-            $urlPasswordBase64 = base64_encode($recoveryPassword['encryption']);
-            $body = 'Body of thhe email: '.$urlPasswordBase64;
-            $this->emailService->handleRequest($user->email, $subject, $body);
-        }
-
        
-        // if($emailQueued){
-        //     return [ 'message' => "We've sent an email with instructions to recovery your password. = ".$urlPasswordBase64 ];
+        $recoveryPassword = [
+            'encryption' => Hash::make($user->id),
+            'is_active' => true,
+            'user_id' => $user->id
+        ];
+
+        //If user's recovery password does not exist, create one.
+        if(is_null($user->recoveryPassword)){
+            $this->recoveryPasswordRepository->create($recoveryPassword);
+        }
+
+        //If User's recovery password is not active, update it.
+        if(!$user->recoveryPassword->IsActive()){
+            unset($recoveryPassword['user_id']);
+            $this->recoveryPasswordRepository->updateBy($recoveryPassword, $user->recoveryPassword->id);
+        }
+
+        return $this->sendRecoveryPasswordEmail($user->email, $recoveryPassword['encryption']);
+
+        // if($user->recoveryPassword){
+        //     if(!$user->recoveryPassword->IsActive()){
+        //         unset($recoveryPassword['user_id']);
+        //         $response = $this->recoveryPasswordRepository->updateBy($recoveryPassword, $user->recoveryPassword->id);
+        //     }else{
+        //         $this->sendRecoveryPasswordEmail($user->email, $user->recoveryPassword->encryption);
+        //     }
+        // }else{
+        //     $response = $this->recoveryPasswordRepository->create($recoveryPassword);
+        // }
+
+        // if($response){
+        //     $this->sendRecoveryPasswordEmail($user->email, $recoveryPassword['encryption']);
         // }
     }
 
+
+    private function sendRecoveryPasswordEmail(string $email, $recoveryHash): Array
+    {
+        //if(isset($response)){
+            $urlRecoveryBase64 = base64_encode($recoveryHash);
+            $subject = "Recovery password";
+            $body = "";
+            $this->emailService->handleRequest($email, $subject, $body);
+            return ["httpCode"=> Response::HTTP_OK, "message" => "We've sent an email with instructions to recovery your password. = ".$urlRecoveryBase64];
+       // }
+    }
 
     /**
      * Recovery user password.
@@ -132,7 +143,6 @@ class AuthService
 
 
 
-
     /**
      * Gets the token array structure
      *
@@ -147,6 +157,5 @@ class AuthService
             'expires_in' => auth()->factory()->getTTL() * 60
         ];
     }
-
    
 }

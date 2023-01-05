@@ -47,8 +47,7 @@ class SendEmailJob extends Job
             // ->bcc($array_emails)
             ->send(new SendEmail($this->email));
         } catch (\Exception $e) {
-            var_dump($e->getMessage()); exit;
-            return $this->response->error($e->getMessage(), 422);
+            return $e->getMessage;
         }
     }
 
