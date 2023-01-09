@@ -86,33 +86,16 @@ class AuthService
         }
 
         return $this->sendRecoveryPasswordEmail($user->email, $recoveryPassword['encryption']);
-
-        // if($user->recoveryPassword){
-        //     if(!$user->recoveryPassword->IsActive()){
-        //         unset($recoveryPassword['user_id']);
-        //         $response = $this->recoveryPasswordRepository->updateBy($recoveryPassword, $user->recoveryPassword->id);
-        //     }else{
-        //         $this->sendRecoveryPasswordEmail($user->email, $user->recoveryPassword->encryption);
-        //     }
-        // }else{
-        //     $response = $this->recoveryPasswordRepository->create($recoveryPassword);
-        // }
-
-        // if($response){
-        //     $this->sendRecoveryPasswordEmail($user->email, $recoveryPassword['encryption']);
-        // }
     }
 
 
     private function sendRecoveryPasswordEmail(string $email, $recoveryHash): Array
     {
-        //if(isset($response)){
-            $urlRecoveryBase64 = base64_encode($recoveryHash);
-            $subject = "Recovery password";
-            $body = "";
-            $this->emailService->handleRequest($email, $subject, $body);
-            return ["httpCode"=> Response::HTTP_OK, "message" => "We've sent an email with instructions to recovery your password. = ".$urlRecoveryBase64];
-       // }
+        $urlRecoveryBase64 = base64_encode($recoveryHash);
+        $subject = "Recovery password";
+        $body = "";
+        $this->emailService->handleRequest($email, $subject, $body);
+        return ["httpCode"=> Response::HTTP_OK, "message" => "We've sent an email with instructions to recovery your password. = ".$urlRecoveryBase64];
     }
 
     /**
@@ -154,7 +137,7 @@ class AuthService
         return [
             'access_token' => $token,
             'token_type'   => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 1
         ];
     }
    
