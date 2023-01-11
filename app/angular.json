@@ -30,9 +30,17 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/css/adminlte.min.css",
+              "./node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss",
+              "./node_modules/@fortawesome/fontawesome-free/scss/solid.scss",
+              "./node_modules/icheck-bootstrap/icheck-bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jquery.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "src/assets/js/adminlte.min.js"
+            ]
           },
           "configurations": {
             "production": {

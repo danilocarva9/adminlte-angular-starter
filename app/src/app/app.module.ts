@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { HeaderComponent } from './pages/private/shared/header/header.component';
 import { FooterComponent } from './pages/private/shared/footer/footer.component';
 import { SideMenuComponent } from './pages/private/shared/side-menu/side-menu.component';
@@ -10,6 +13,8 @@ import { DashboardComponent } from './pages/private/dashboard/dashboard.componen
 import { LoginComponent } from './pages/public/login/login.component';
 import { ForgotPasswordComponent } from './pages/public/forgot-password/forgot-password.component';
 import { RegisterComponent } from './pages/public/register/register.component';
+import { RecoveryPasswordComponent } from './pages/public/recovery-password/recovery-password.component';
+import { SideBarComponent } from './pages/private/shared/side-bar/side-bar.component';
 
 @NgModule({
   declarations: [
@@ -20,11 +25,15 @@ import { RegisterComponent } from './pages/public/register/register.component';
     DashboardComponent,
     LoginComponent,
     ForgotPasswordComponent,
-    RegisterComponent
+    RegisterComponent,
+    RecoveryPasswordComponent,
+    SideBarComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
