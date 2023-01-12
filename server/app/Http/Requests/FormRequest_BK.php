@@ -3,11 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Validation\UnauthorizedException;
 use Laravel\Lumen\Routing\ProvidesConvenienceMethods;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class FormRequest
 {
@@ -22,24 +19,8 @@ class FormRequest
         $this->prepareForValidation();
 
         if (!$this->authorize()) throw new UnauthorizedException;
-      
-        $this->validate($this->req, $this->rules(), $messages, $customAttributes);
-    }
 
-     /**
-     * Throw the failed validation exception.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function throwValidationException(Request $request, $validator)
-    {
-        throw new HttpResponseException(
-            \ApiResponse::httpCode(Response::HTTP_UNPROCESSABLE_ENTITY)->message($validator->errors()->all())->failed()
-        );
+        $this->validate($this->req, $this->rules(), $messages, $customAttributes);
     }
 
     public function all()
@@ -58,8 +39,6 @@ class FormRequest
         }
         return $this->req->get($key, $default);
     }
-
-    
 
     protected function prepareForValidation()
     {
