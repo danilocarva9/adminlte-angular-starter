@@ -5,7 +5,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { JwtHelperService, JWT_OPTIONS  } from '@auth0/angular-jwt';
 
+import { AuthGuard } from './core/auth/auth.guard';
 import { HeaderComponent } from './pages/private/shared/header/header.component';
 import { FooterComponent } from './pages/private/shared/footer/footer.component';
 import { SideMenuComponent } from './pages/private/shared/side-menu/side-menu.component';
@@ -35,7 +37,11 @@ import { SideBarComponent } from './pages/private/shared/side-bar/side-bar.compo
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    AuthGuard,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+      JwtHelperService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
