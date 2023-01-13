@@ -23,18 +23,11 @@ export class AuthService {
 
   login(email: string, password: string):Observable<any> {
      return this.httpClient.post(this.apiUrl+'login', {email, password}).pipe(map((user: any) => {
-      //  / console.log(JSON.stringify(user));
-        // if(user.token && user.access_token){
-        //   user = 'teste user';
-        // }
         if(user.data.access_token){
           localStorage.setItem('token', user.data.access_token);
         }
-       
-       
         return user;
      }));
-
   }
 
   

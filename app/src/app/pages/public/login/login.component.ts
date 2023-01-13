@@ -50,6 +50,7 @@ export class LoginComponent {
       .subscribe({
         next: (res) =>  {
           console.error('Userinfo: '+JSON.stringify(res)); //this.userInfo = res,
+          this.loading = false;
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {

@@ -30,10 +30,15 @@
           </div>
         </div>
 
-        <p *ngIf="errorMessage.length > 0" class="text-danger text-center mt-2 mb-3">
+        <!-- <p *ngIf="errorMessage.length > 0" class="text-danger text-center mt-2 mb-3">
           {{ errorMessage }}
-        </p> 
-      
+        </p>  -->
+
+        <ul *ngIf="errorMessage.length > 0">
+          <li *ngFor="let message of errorMessage">
+            {{ message }}
+          </li>
+        </ul>
 
         <div class="row">
           <div class="col-8">
