@@ -5,14 +5,14 @@ import { ForgotPasswordComponent } from './pages/public/forgot-password/forgot-p
 import { LoginComponent } from './pages/public/login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/auth/auth.guard';
+import { AuthGuard } from './core/guard/auth.guard';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'recovery-password', component: RecoveryPasswordComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

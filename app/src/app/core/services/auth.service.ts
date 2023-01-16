@@ -9,12 +9,14 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AuthService {
 
   private apiUrl;
+  private tokenKey: string;
 
   constructor(
     private jwtHelper: JwtHelperService,
     private httpClient: HttpClient
   ) { 
     this.apiUrl = 'http://localhost:8000/';
+    this.tokenKey = 'token';
   }
 
   register(registerData: []):Observable<any> {
@@ -23,8 +25,8 @@ export class AuthService {
 
   login(email: string, password: string):Observable<any> {
      return this.httpClient.post(this.apiUrl+'login', {email, password}).pipe(map((user: any) => {
-        if(user.data.access_token){
-          localStorage.setItem('token', user.data.access_token);
+      if(user.data.access_token){
+          this.setToken(user.data.access_token);
         }
         return user;
      }));
@@ -32,8 +34,18 @@ export class AuthService {
 
   isAuthenticated(): Boolean
   {
-    const token = localStorage.getItem('token');
+    const token = this.getToken();
     return !this.jwtHelper.isTokenExpired(token);
+  }
+
+  setToken(token: string): void
+  {
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+  getToken()
+  {
+    return localStorage.getItem(this.tokenKey);
   }
 
   

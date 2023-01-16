@@ -1,13 +1,14 @@
+import { AuthInterceptor } from './core/interceptor/auth.interceptor';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JwtHelperService, JWT_OPTIONS  } from '@auth0/angular-jwt';
 
-import { AuthGuard } from './core/auth/auth.guard';
+import { AuthGuard } from './core/guard/auth.guard';
 import { HeaderComponent } from './pages/private/shared/header/header.component';
 import { FooterComponent } from './pages/private/shared/footer/footer.component';
 import { SideMenuComponent } from './pages/private/shared/side-menu/side-menu.component';
@@ -39,8 +40,16 @@ import { SideBarComponent } from './pages/private/shared/side-bar/side-bar.compo
   ],
   providers: [
     AuthGuard,
-    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
-      JwtHelperService
+    { 
+      provide: JWT_OPTIONS,
+      useValue: JWT_OPTIONS 
+    },
+      JwtHelperService,
+    { 
+      provide: HTTP_INTERCEPTORS, 
+      useClass: AuthInterceptor, 
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

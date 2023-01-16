@@ -48,18 +48,13 @@ export class LoginComponent {
 
     this.loading = true;
 
-    
-
     this.authService.login(this.form.email.value, this.form.password.value)
       .subscribe({
         next: (res) =>  {
-          console.error('Userinfo: '+JSON.stringify(res)); //this.userInfo = res,
           this.loading = false;
           if(this.authService.isAuthenticated()){
-            console.log('loggado');
-            //this.router.navigate(['/dashboard']);
+            this.router.navigate(['/dashboard']);
           }
-          //return false;
         },
         error: (err) => {
           console.log('error: '+JSON.stringify(err.error.message));
