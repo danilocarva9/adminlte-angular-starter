@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Constants } from 'src/app/config/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
     private jwtHelper: JwtHelperService,
     private httpClient: HttpClient
   ) { 
-    this.apiUrl = 'http://localhost:8000/';
+    this.apiUrl = Constants.API_ENDPOINT;
     this.tokenKey = 'token';
   }
 

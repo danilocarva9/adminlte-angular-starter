@@ -7,7 +7,6 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { NgIfContext } from '@angular/common';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
