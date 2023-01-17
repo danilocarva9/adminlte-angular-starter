@@ -1,3 +1,4 @@
+import { ProfileComponent } from './pages/private/profile/profile.component';
 import { DashboardComponent } from './pages/private/dashboard/dashboard.component';
 import { RecoveryPasswordComponent } from './pages/public/recovery-password/recovery-password.component';
 import { RegisterComponent } from './pages/public/register/register.component';
@@ -12,7 +13,15 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'recovery-password', component: RecoveryPasswordComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }
+  { 
+    path: '', canActivate: [AuthGuard],
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'profile', component: ProfileComponent }
+    ]
+  }
+
+  //{ path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

@@ -18,6 +18,7 @@ import { ForgotPasswordComponent } from './pages/public/forgot-password/forgot-p
 import { RegisterComponent } from './pages/public/register/register.component';
 import { RecoveryPasswordComponent } from './pages/public/recovery-password/recovery-password.component';
 import { SideBarComponent } from './pages/private/shared/side-bar/side-bar.component';
+import { ProfileComponent } from './pages/private/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SideBarComponent } from './pages/private/shared/side-bar/side-bar.compo
     ForgotPasswordComponent,
     RegisterComponent,
     RecoveryPasswordComponent,
-    SideBarComponent
+    SideBarComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

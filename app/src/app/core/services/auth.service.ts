@@ -32,6 +32,11 @@ export class AuthService {
      }));
   }
 
+  logout(): void
+  {
+    localStorage.removeItem(this.tokenKey);
+  }
+
   isAuthenticated(): Boolean
   {
     const token = this.getToken();
@@ -48,5 +53,6 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
+ 
   
 }
