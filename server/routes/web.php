@@ -23,3 +23,7 @@ $router->group(['prefix' => ''], function () use ($router) {
     $router->post('forgot-password', 'AuthController@forgotPassword');
     $router->post('recovery-password', 'AuthController@recoveryPassword');
 });
+
+$router->group(['middleware' => 'auth', 'prefix' => ''], function () use ($router) {
+    $router->get('profile/{id}', 'UserController@getUserProfileById');
+});
