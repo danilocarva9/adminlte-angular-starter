@@ -25,5 +25,7 @@ $router->group(['prefix' => ''], function () use ($router) {
 });
 
 $router->group(['middleware' => 'auth', 'prefix' => ''], function () use ($router) {
-    $router->get('profile/{id}', 'UserController@getUserProfileById');
+    $router->put('users/{id}', 'UserController@findByIdAndUpdate');
+    $router->get('users/{id}/profile', 'UserController@findById');
+   
 });

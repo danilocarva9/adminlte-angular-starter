@@ -15,6 +15,17 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
+
+    public function find(int $id): Array
+    {
+        $user = $this->userRepository->findBy([['id', $id]]);
+        if(!is_null($user)){
+            return ['httpCode' => Response::HTTP_OK, 'data'=> $user];
+        }
+        return ["httpCode"=> Response::HTTP_NOT_FOUND, "message" => "User not found."];
+    }
+
+
    public function create(array $request): User
    {
         $request = [
@@ -24,6 +35,15 @@ class UserService
         ];
         return $this->userRepository->create($request);
    }
+
+
+   public function update(int $ind, array $params)
+   {
+
+   }
+
+
+  
 
    
 }
