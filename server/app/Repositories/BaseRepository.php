@@ -19,9 +19,18 @@ abstract class BaseRepository
     }
 
 
-    public function updateBy(array $params, int $id): Bool
+    public function findByOrCreate(string $attribute, int $value, array $request)
     {
-        return $this->getModel()->findOrFail($id)->updateOrFail($params);
+        $model = $this->getModel()->where($attribute, '=', $value)->first();
+        if(is_null($model)){
+            return $this->create($request);
+        }
+        return $this->updateBy($request, $model->id);
+    }
+
+    public function updateBy(array $params, int $id): Model
+    {
+        return tap($this->getModel()->findOrFail($id))->updateOrFail($params);
     }
  
     public function create(array $data): Model

@@ -17,6 +17,7 @@
 //     return \Illuminate\Support\Str::random(32);
 // });
 
+//Public
 $router->group(['prefix' => ''], function () use ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
@@ -24,8 +25,8 @@ $router->group(['prefix' => ''], function () use ($router) {
     $router->post('recovery-password', 'AuthController@recoveryPassword');
 });
 
-$router->group(['middleware' => 'auth', 'prefix' => ''], function () use ($router) {
-    $router->put('users/{id}', 'UserController@findByIdAndUpdate');
-    $router->get('users/{id}/profile', 'UserController@findById');
-   
+//Users
+$router->group(['middleware' => 'auth', 'prefix' => 'users'], function () use ($router) {
+    $router->get('{id}/profile', 'UserController@findById');
+    $router->patch('{id}/profile', 'UserController@updateUserProfile');
 });

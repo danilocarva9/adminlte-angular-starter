@@ -4,17 +4,22 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Http\Response;
 use App\Repositories\UserRepository;
+use App\Repositories\ProfileRepository;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
     protected $userRepository;
+    protected $profileRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(
+        UserRepository $userRepository,
+        ProfileRepository $profileRepository
+    )
     {
         $this->userRepository = $userRepository;
+        $this->profileRepository = $profileRepository;
     }
-
 
     public function find(int $id): Array
     {
@@ -37,13 +42,21 @@ class UserService
    }
 
 
-   public function update(int $ind, array $params)
+   public function updateUserProfile(array $request, int $id)
    {
+        $request['user_id'] = $id;
+        $userProfile = $this->profileRepository->findByOrCreate('user_id', $id, $request);
 
+        if(!is_null($userProfile)){
+            return ['httpCode' => Response::HTTP_OK, 'data'=> $userProfile];
+        }
    }
-
-
   
+
+   private function uploadPicture()
+   {
+    
+   }
 
    
 }

@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AuthService;
 use App\Services\UserService;
-use App\Http\Requests\UserStoreRequest;
-use App\Http\Requests\Auth\AuthLoginRequest;
-use App\Http\Requests\Auth\ForgotPasswordRequest;
-use App\Http\Requests\Auth\RecoveryPasswordRequest;
+use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Http\Response;
-use Throwable;
 use Illuminate\Http\Request;
+
 
 class UserController extends Controller
 {
@@ -39,11 +35,13 @@ class UserController extends Controller
     }
 
 
-    public function findByIdAndUpdate()
+    public function updateUserProfile(UserUpdateRequest $request, int $id)
     {
-
-       // $this->userService->update()
-
+        $response = $this->userService->updateUserProfile($request->get(['role', 'description', 'picture']), $id);
+        if($response['httpCode'] == Response::HTTP_OK){
+            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success();
+        }
+        return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
     }
 
 }

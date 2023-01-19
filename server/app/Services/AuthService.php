@@ -117,7 +117,7 @@ class AuthService
        
         $user = $this->userRepository->updateBy(['password' => Hash::make($request['password'])], $recoveryPassword->user->id);
 
-        if($user){
+        if(!is_null($user)){
             $recoveryPassword->is_active = false;
             $recoveryPassword->save();
         }
