@@ -28,7 +28,7 @@ export class ProfileComponent {
     this.profileForm = this.FormBuilder.group({
       name: ['', Validators.required],
       role: ['', Validators.required],
-      description: ['', Validators.required],
+      description: ['', Validators.required]
     });
   }
 
@@ -45,6 +45,8 @@ export class ProfileComponent {
       return;
     }
     //Get all form values
+    
+    this.form.get('picture');
     let formValues = this.form.getRawValue();
 
     //If has user picture
@@ -87,10 +89,10 @@ export class ProfileComponent {
         const reader = new FileReader();
 
         reader.onload = (e: any) => {
-          console.log(e.target.result);
           this.preview = e.target.result;
+          console.log(e.target.result);
         }
-
+       // console.log(this.currentFile);
         reader.readAsDataURL(this.currentFile);
       }
     }
