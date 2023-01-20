@@ -44,21 +44,30 @@ export class ProfileComponent {
       console.log('form invalid');
       return;
     }
+    //Set form data
+    const formdata: FormData = new FormData();
+
     //Get all form values
-    
-    this.form.get('picture');
     let formValues = this.form.getRawValue();
+
+    for(let key in formValues){
+      formdata.append(key, formValues[key]);
+    }
 
     //If has user picture
     if(this.selectedFiles){
       const file: File | null = this.selectedFiles.item(0);
       if(file){
         this.currentFile = file;
-        formValues.picture = this.currentFile;
+        // console.log(this.currentFile);
+        //formValues.picture = this.currentFile;
+        formdata.append('picture', this.currentFile);
       }
     }
     
-    this.profileService.saveProfile(formValues)
+    console.log(formdata);
+    
+    this.profileService.saveProfile(formdata)
       .subscribe({
           next: (res) =>  {
           this.loading = false;

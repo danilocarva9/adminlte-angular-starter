@@ -18,8 +18,8 @@ export class ProfileService {
   }
  
 
-  saveProfile(profileInfo: any):Observable<any> {
-     return this.httpClient.patch(this.apiUrl+'users/3/profile', profileInfo).pipe(map((userProfile: any) => {
+  saveProfile(formData: any):Observable<any> {
+     return this.httpClient.post(this.apiUrl+'users/3/profile', formData).pipe(map((userProfile: any) => {
         return userProfile;
      }));
   }
