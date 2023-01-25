@@ -3,6 +3,7 @@ import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Constants } from 'src/app/config/constants';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class AuthService {
     private httpClient: HttpClient
   ) { 
     this.apiUrl = Constants.API_ENDPOINT;
-    this.tokenKey = 'token';
+    this.tokenKey = 'chaveSecretaToken123';
+   
   }
 
   register(registerData: []):Observable<any> {
@@ -26,8 +28,8 @@ export class AuthService {
 
   login(email: string, password: string):Observable<any> {
      return this.httpClient.post(this.apiUrl+'login', {email, password}).pipe(map((user: any) => {
-      if(user.data.access_token){
-          this.setToken(user.data.access_token);
+       if(user.data.access_token){
+          this.setData('token', user.data.access_token);
         }
         return user;
      }));
@@ -35,23 +37,37 @@ export class AuthService {
 
   logout(): void
   {
-    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('token');
+  }
+
+  getAuthUserInfo(): object {
+    const token = this.getData('token');
+    const userInfo = this.jwtHelper.decodeToken(token);
+    console.log(userInfo.user);
+    return userInfo.user;
   }
 
   isAuthenticated(): Boolean
   {
-    const token = this.getToken();
+    const token = this.getData('token');
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  setToken(token: string): void
-  {
-    localStorage.setItem(this.tokenKey, token);
+  setData(key: string, data: string): void {
+    localStorage.setItem(key, this.encrypt(data));
   }
 
-  getToken()
-  {
-    return localStorage.getItem(this.tokenKey);
+  getData(value: string): string {
+    let data = localStorage.getItem(value) || "";
+    return this.decrypt(data);
+  }
+
+  private encrypt(value: string): string {
+    return CryptoJS.AES.encrypt(value, this.tokenKey).toString();
+  }
+
+  private decrypt(value: string): string {
+    return CryptoJS.AES.decrypt(value, this.tokenKey).toString(CryptoJS.enc.Utf8);
   }
 
  

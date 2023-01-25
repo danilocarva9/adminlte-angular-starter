@@ -18,7 +18,7 @@ constructor(private authService:AuthService){}
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
 
-        const token = this.authService.getToken();
+        const token = this.authService.getData('token');
 
         if(token == null){
             return next.handle(request);
