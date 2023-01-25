@@ -59,8 +59,6 @@ export class ProfileComponent {
       const file: File | null = this.selectedFiles.item(0);
       if(file){
         this.currentFile = file;
-        // console.log(this.currentFile);
-        //formValues.picture = this.currentFile;
         formdata.append('picture', this.currentFile);
       }
     }
