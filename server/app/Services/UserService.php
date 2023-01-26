@@ -41,22 +41,28 @@ class UserService
         return $this->userRepository->create($request);
    }
 
-
-   public function updateUserProfile(array $request, int $id)
+   public function updateUserProfile(array $request)
    {
-        $request['user_id'] = $id;
-        $userProfile = $this->profileRepository->findByOrCreate('user_id', $id, $request);
+        $user = $this->userRepository->findBy([['id', $request['user_id'], '=']]);
+        $user->name = $request['name'];
+        $user->save();
+     
+        $profile = [
+            'role' => $request['role'], 
+            'description' => $request['description'],
+            'picture' => $this->uploadPicture($request['picture'])
+        ];
+        $user->profile->fill($profile);
+        $user->profile->save();
 
-        if(!is_null($userProfile)){
-            return ['httpCode' => Response::HTTP_OK, 'data'=> $userProfile];
+        if(!is_null($user)){
+            return ['httpCode' => Response::HTTP_OK, 'data'=> $user];
         }
    }
-  
 
-   private function uploadPicture()
+   private function uploadPicture($picture = null)
    {
-    
+        return 'picturename4.jpg';
    }
-
    
 }

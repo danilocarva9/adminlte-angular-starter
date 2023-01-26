@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('role');
             $table->tinyText('description');
-            $table->string('picture');
+            $table->string('picture')->nullable();
             $table->integer('user_id')->unsigned()->unique();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

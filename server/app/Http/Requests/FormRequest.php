@@ -59,7 +59,12 @@ class FormRequest
         return $this->req->get($key, $default);
     }
 
-    
+    public function add($key, $default = null)
+    {
+       $request = $this->req->all();
+       $request[$key] = $default;
+       return $request;
+    }
 
     protected function prepareForValidation()
     {

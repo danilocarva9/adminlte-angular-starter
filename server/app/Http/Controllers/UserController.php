@@ -6,7 +6,7 @@ use App\Services\UserService;
 use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-
+use Throwable;
 
 class UserController extends Controller
 {
@@ -35,13 +35,18 @@ class UserController extends Controller
     }
 
 
-    public function updateUserProfile(UserUpdateRequest $request, int $id)
+    public function updateUserProfile(UserUpdateRequest $request)
     {
-        $response = $this->userService->updateUserProfile($request->get(['role', 'description', 'picture']), $id);
-        if($response['httpCode'] == Response::HTTP_OK){
-            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success();
+        if(isset($_FILES['picture'])){
+            $request->add('picture', $_FILES['picture']);
         }
-        return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
+        try {
+            $response = $this->userService->updateUserProfile($request->all());
+            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success();
+        } catch(Throwable $exception) {
+            return \ApiResponse::failed($exception);
+        }
+       
     }
 
 }
