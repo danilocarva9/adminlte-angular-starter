@@ -1,6 +1,7 @@
 import { ProfileService } from 'src/app/core/services/user/profile.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,6 +14,7 @@ export class ProfileComponent {
   loading = false;
   submitted = false;
   errorMessage = [];
+  user: any = {};
 
   selectedFiles?: FileList;
   currentFile?: File;
@@ -21,8 +23,11 @@ export class ProfileComponent {
 
   constructor(
     private FormBuilder: FormBuilder,
-    private profileService: ProfileService
-  ){}
+    private profileService: ProfileService,
+    private authService: AuthService
+  ){
+    this.user = this.authService.getAuthUserInfo();
+  }
 
   ngOnInit(): void {
     this.profileForm = this.FormBuilder.group({
@@ -39,9 +44,9 @@ export class ProfileComponent {
   onSubmit(){
 
     this.submitted = true;
+
     //Stop if the form is invalid
     if(this.form.invalid){
-      console.log('form invalid');
       return;
     }
     //Set form data
@@ -53,6 +58,9 @@ export class ProfileComponent {
     for(let key in formValues){
       formdata.append(key, formValues[key]);
     }
+    
+    //Add user to data
+    formdata.append('user_id', this.user.id);
 
     //If has user picture
     if(this.selectedFiles){
@@ -62,8 +70,6 @@ export class ProfileComponent {
         formdata.append('picture', this.currentFile);
       }
     }
-    
-    console.log(formdata);
     
     this.profileService.saveProfile(formdata)
       .subscribe({
