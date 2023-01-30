@@ -11,7 +11,11 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string'
+            'user_id' => 'required|int',
+            'name' => 'required|string',
+            'role' => 'required|string',
+            'description' => 'required|min:3|max:1000',
+            'picture' => 'sometimes|required|mimes:png,jpg,jpeg|max:2048'
         ];
     }
 

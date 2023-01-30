@@ -5,20 +5,24 @@ use App\Models\User;
 use Illuminate\Http\Response;
 use App\Repositories\UserRepository;
 use App\Repositories\ProfileRepository;
+use App\Services\UploadService;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
     protected $userRepository;
     protected $profileRepository;
+    protected $uploadService;
 
     public function __construct(
         UserRepository $userRepository,
-        ProfileRepository $profileRepository
+        ProfileRepository $profileRepository,
+        UploadService $uploadService
     )
     {
         $this->userRepository = $userRepository;
         $this->profileRepository = $profileRepository;
+        $this->uploadService = $uploadService;
     }
 
     public function find(int $id): Array
@@ -41,17 +45,19 @@ class UserService
         return $this->userRepository->create($request);
    }
 
-   public function updateUserProfile(array $request)
+   public function updateUserProfile($request)
    {
         $user = $this->userRepository->findBy([['id', $request['user_id'], '=']]);
         $user->name = $request['name'];
         $user->save();
-     
+
         $profile = [
             'role' => $request['role'], 
-            'description' => $request['description'],
-            'picture' => $this->uploadPicture($request['picture'])
+            'description' => $request['description']
         ];
+        if(isset($request['picture'])){
+            $profile['picture'] = $this->uploadService->uploadPicture($request['picture']);
+        }
         $user->profile->fill($profile);
         $user->profile->save();
 
@@ -60,9 +66,4 @@ class UserService
         }
    }
 
-   private function uploadPicture($picture = null)
-   {
-        return 'picturename4.jpg';
-   }
-   
 }

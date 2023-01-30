@@ -37,12 +37,9 @@ class UserController extends Controller
 
     public function updateUserProfile(UserUpdateRequest $request)
     {
-        if(isset($_FILES['picture'])){
-            $request->add('picture', $_FILES['picture']);
-        }
         try {
             $response = $this->userService->updateUserProfile($request->all());
-            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success();
+            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success()->setEncodingOptions(JSON_UNESCAPED_SLASHES);;
         } catch(Throwable $exception) {
             return \ApiResponse::failed($exception);
         }
