@@ -80,9 +80,11 @@ class AuthService
         }
 
         //If User's recovery password is not active, update it.
-        if(!$user->recoveryPassword->IsActive()){
-            unset($recoveryPassword['user_id']);
-            $this->recoveryPasswordRepository->updateBy($recoveryPassword, $user->recoveryPassword->id);
+        if(isset($user->recoveryPassword)){
+            if(!$user->recoveryPassword->IsActive()){
+                unset($recoveryPassword['user_id']);
+                $this->recoveryPasswordRepository->updateBy($recoveryPassword, $user->recoveryPassword->id);
+            }
         }
 
         return $this->sendRecoveryPasswordEmail($user->email, $recoveryPassword['encryption']);
@@ -93,9 +95,9 @@ class AuthService
     {
         $urlRecoveryBase64 = base64_encode($recoveryHash);
         $subject = "Recovery password";
-        $body = "";
+        $body = $urlRecoveryBase64;
         $this->emailService->handleRequest($email, $subject, $body);
-        return ["httpCode"=> Response::HTTP_OK, "message" => "We've sent an email with instructions to recovery your password. = ".$urlRecoveryBase64];
+        return ["httpCode"=> Response::HTTP_OK, "message" => "We've sent an email with instructions to recovery your password."];
     }
 
     /**
@@ -106,6 +108,7 @@ class AuthService
      */
     public function recoveryPassword(array $request): Array
     {
+  
         $recoveryPassword = $this->recoveryPasswordRepository->findBy([
             ['encryption', base64_decode($request['recoveryHash']), '='],
             ['is_active', true ]

@@ -2,8 +2,7 @@
 
 namespace Tests;
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
+use Illuminate\Http\Response;
 
 class UserLoginTest extends TestCase
 {
@@ -25,33 +24,44 @@ class UserLoginTest extends TestCase
             "userInfoShouldBeRequired" =>
             [
                 "inputValue" => [],
-                "expectedStatus" => 422,
+                "expectedStatus" => Response::HTTP_UNPROCESSABLE_ENTITY,
                 "expectedData" => [
-                    "email" => ["The email field is required."],
-                    "password" => ["The password field is required."]
+                    "status" => "error",
+                    "http_code" => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    "message" => [
+                        "email is required.",
+                        "password is required."
+                    ]
                 ]
             ],
-
+           
             "userInfoShouldBeValid" =>
             [
                 "inputValue" => [
-                    "email" => "johnkennedy@gmail.com",
+                    "email" => "dante@gmail.com",
                     "password" => "123456"
                 ],
-                "expectedStatus" => 200
+                "expectedStatus" => Response::HTTP_OK,
+                "expectedData" => [
+                    "status" => "success",
+                    "http_code" => Response::HTTP_OK,
+                    "message" => "You have successfully logged in.",
+                ]
             ],
 
             "userInfoShouldNotBeValid" =>
             [
                 "inputValue" => [
-                    "email" => "johnkennedy@gmail.com",
-                    "password" => "1234561"
+                    "email" => "usertofail@gmail.com",
+                    "password" => "123456"
                 ],
-                "expectedStatus" => 401,
+                "expectedStatus" => Response::HTTP_UNAUTHORIZED,
                 "expectedData" => [
-                    "error" => "You have entered an invalid email or password."
+                    "status" => "error",
+                    "http_code" => Response::HTTP_UNAUTHORIZED,
+                    "message" => "You have entered an invalid email or password."
                 ]
-            ],
+            ]
         ];
     }
 }

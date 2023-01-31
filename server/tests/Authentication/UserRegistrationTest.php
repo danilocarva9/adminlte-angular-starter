@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Http\Response;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
@@ -24,11 +25,17 @@ class UserRegistrationTest extends TestCase
         return [
             "userInfoAreRequired" =>
             [
-                "inputValue" => [
-                    "name" => "John Kennedy",
-                    "email" => "johnkennedy_".rand()."@gmail.com"
-                ],
-                "expectedStatus" => 422
+                "inputValue" => [],
+                "expectedStatus" => Response::HTTP_UNPROCESSABLE_ENTITY,
+                "expectedData" => [
+                    "status" => "error",
+                    "http_code" => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    "message" => [
+                        "name is required.",
+                        "email is required.",
+                        "password is required."
+                    ]
+                ]
             ],
 
             "userInfoShouldBeValid" =>
@@ -39,7 +46,12 @@ class UserRegistrationTest extends TestCase
                     "password" => "123456",
                     "password_confirmation" => "123456"
                 ],
-                "expectedStatus" => 201
+                "expectedStatus" => Response::HTTP_CREATED,
+                "expectedData" => [
+                    "status" => "success",
+                    "http_code" => Response::HTTP_CREATED,
+                    "message" => "Created.",
+                ]
             ],
 
             "userEmailIsAlreadyTaken" =>
@@ -50,9 +62,13 @@ class UserRegistrationTest extends TestCase
                     "password" => "123456",
                     "password_confirmation" => "123456"
                 ],
-                "expectedStatus" => 422,
+                "expectedStatus" => Response::HTTP_UNPROCESSABLE_ENTITY,
                 "expectedData" => [
-                    "email" => ["The email has already been taken."],
+                    "status" => "error",
+                    "http_code" => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    "message" => [
+                        "email must be unique."
+                    ]
                 ]
             ],
             
@@ -60,15 +76,19 @@ class UserRegistrationTest extends TestCase
             [
                 "inputValue" => [
                     "name" => "John Kennedy",
-                    "email" => "johnkennedy@gmail.com",
+                    "email" => "johnkennedy_".rand()."@gmail.com",
                     "password" => "123456",
                     "password_confirmation" => "1234566"
                 ],
-                "expectedStatus" => 422,
+                "expectedStatus" => Response::HTTP_UNPROCESSABLE_ENTITY,
                 "expectedData" => [
-                    "password" => ["The password confirmation does not match."],
+                    "status" => "error",
+                    "http_code" => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    "message" => [
+                        "The password confirmation does not match."
+                    ]
                 ]
-            ],
+            ]
            
         ];
     }

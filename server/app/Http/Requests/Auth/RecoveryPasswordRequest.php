@@ -13,7 +13,8 @@ class RecoveryPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => 'required|confirmed'
+            'password' => 'required|confirmed',
+            'recoveryHash' => 'required'
         ];
     }
 
