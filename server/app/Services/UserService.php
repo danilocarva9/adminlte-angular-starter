@@ -29,7 +29,7 @@ class UserService
     {
         $user = $this->userRepository->findBy([['id', $id]]);
         if(!is_null($user)){
-            return ['httpCode' => Response::HTTP_OK, 'data'=> $user];
+            return ['httpCode' => Response::HTTP_OK, 'data'=> $user, $user->profile];
         }
         return ["httpCode"=> Response::HTTP_NOT_FOUND, "message" => "User not found."];
     }

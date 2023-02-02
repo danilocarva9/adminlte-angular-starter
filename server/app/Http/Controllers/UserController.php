@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         $response = $this->userService->find($id);
         if($response['httpCode'] == Response::HTTP_OK){
-            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success();
+            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success()->setEncodingOptions(JSON_UNESCAPED_SLASHES);
         }
         return \ApiResponse::httpCode($response['httpCode'])->message($response['message'])->failed();
     }
@@ -39,7 +39,7 @@ class UserController extends Controller
     {
         try {
             $response = $this->userService->updateUserProfile($request->all());
-            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success()->setEncodingOptions(JSON_UNESCAPED_SLASHES);;
+            return \ApiResponse::httpCode($response['httpCode'])->data($response['data'])->success()->setEncodingOptions(JSON_UNESCAPED_SLASHES);
         } catch(Throwable $exception) {
             return \ApiResponse::failed($exception);
         }

@@ -43,7 +43,6 @@ export class AuthService {
   getAuthUserInfo(): object {
     const token = this.getData('token');
     const userInfo = this.jwtHelper.decodeToken(token);
-    console.log(userInfo.user);
     return userInfo.user;
   }
 

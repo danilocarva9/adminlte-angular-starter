@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/core/services/user/user.service';
 import { ProfileService } from 'src/app/core/services/user/profile.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -15,6 +16,7 @@ export class ProfileComponent {
   submitted = false;
   errorMessage = [];
   user: any = {};
+  profile: any = {};
 
   selectedFiles?: FileList;
   currentFile?: File;
@@ -24,7 +26,8 @@ export class ProfileComponent {
   constructor(
     private FormBuilder: FormBuilder,
     private profileService: ProfileService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ){
     this.user = this.authService.getAuthUserInfo();
   }
@@ -33,35 +36,53 @@ export class ProfileComponent {
     this.profileForm = this.FormBuilder.group({
       name: ['', Validators.required],
       role: ['', Validators.required],
-      description: ['', Validators.required]
+      description: ['', Validators.required],
+      picture: [null]
     });
+    this.loadUserProfile(this.user.id);
   }
 
-   // get to return form fields
-  // get form() { return this.profileForm.controls; }
+
+  private loadUserProfile(userId: number)
+  {
+    this.userService.getUserById(userId)
+      .subscribe({
+          next: (user) =>  {
+            this.profileForm.patchValue({
+              name: user.data.name,
+              role: user.data.profile.role,
+              description: user.data.profile.description,
+              picture: user.data.profile.picture
+            })
+          },
+          error: (err) => {
+            console.log('error: '+JSON.stringify(err.error.message));
+            this.errorMessage = err.error.message;
+          }
+    });
+  
+  }
+
+  // Get to return form fields
   get form() { return this.profileForm; }
 
   onSubmit(){
 
     this.submitted = true;
-
     //Stop if the form is invalid
     if(this.form.invalid){
       return;
     }
     //Set form data
     const formdata: FormData = new FormData();
-
     //Get all form values
     let formValues = this.form.getRawValue();
 
     for(let key in formValues){
       formdata.append(key, formValues[key]);
     }
-    
     //Add user to data
     formdata.append('user_id', this.user.id);
-
     //If has user picture
     if(this.selectedFiles){
       const file: File | null = this.selectedFiles.item(0);
@@ -74,8 +95,7 @@ export class ProfileComponent {
     this.profileService.saveProfile(formdata)
       .subscribe({
           next: (res) =>  {
-          this.loading = false;
-            console.log(res);
+            this.loading = false;
           },
           error: (err) => {
             console.log('error: '+JSON.stringify(err.error.message));
@@ -83,7 +103,6 @@ export class ProfileComponent {
             this.loading = false;
           }
     });
-
   }
 
   //Select and show preview of the picture
@@ -111,6 +130,5 @@ export class ProfileComponent {
     }
   }
 
-  
 
 }
