@@ -33,7 +33,14 @@ Node.js, npm package manager
 #### Running Server API
 1. To start the Lumen application, you need to enter the server folder and run `composer install` (to install the project dependencies).
 2. After all dependencies are installed, change file `.env.example` to `.env` and configure the default settings. You should also generate an APP_KEY and JWT_SECRET.
-3. Run the server using `php -S localhost:8000 -t public`
+3. Inside the server folder, run `php artisan migrate` to migrate and create the tables in the database.
+4. You should also run `php artisan db:seed` to create a default user in the database (for testing purposes) - note that some tests can only run one, because of the changes in the user infos.
+5. Run the server using `php -S localhost:8000 -t public`.
+
+Notes:
+1. To run tests, on command line hit:
+`vendor/bin/phpunit` to run all tests
+`vendor/bin/phpunit --filter=UserForgotPasswordTest` to run a test class, you can find the classes at `tests` folder in the project`s root folder.
 
 ## Authors
 

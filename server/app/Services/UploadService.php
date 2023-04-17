@@ -3,13 +3,13 @@ namespace App\Services;
 
 class UploadService
 {
-    private $uploadPath;
+    private string $uploadPath;
 
     public function __construct()
     {
         $this->uploadPath = 'public/uploads';
     }
-   
+
     /**
      * Simple image upload
      *
@@ -26,9 +26,9 @@ class UploadService
         }
     }
 
-    private function mountUrl($path)
+    private function mountUrl($path): string
     {
         return url().'/'.$path;
     }
-   
+
 }

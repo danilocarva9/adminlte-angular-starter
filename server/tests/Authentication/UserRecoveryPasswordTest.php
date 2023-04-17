@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 class UserRecoveryPasswordTest extends TestCase
 {
     /**
-     * @dataProvider userRecoveryPasswordDataProvider 
+     * @dataProvider userRecoveryPasswordDataProvider
      */
     public function testIsRecoveryPasswordValid($inputValue, $expectedStatus, $expectedData = null)
     {
@@ -40,7 +40,7 @@ class UserRecoveryPasswordTest extends TestCase
                 "inputValue" => [
                     "password" => "123456",
                     "password_confirmation" => "1234567",
-                    "recoveryHash" => "fakeHash123"
+                    "recoveryHash" => "JDJ5JDEwJHQubk40aGU3c3pHNWxRbjByRC9UYU9iQWxaZGJSaExGUGJDaUpPanpyTUtBY2FlRi9QdmQy"
                 ],
                 "expectedStatus" => Response::HTTP_UNPROCESSABLE_ENTITY,
                 "expectedData" => [
@@ -57,28 +57,28 @@ class UserRecoveryPasswordTest extends TestCase
                 "inputValue" => [
                     "password" => "123456",
                     "password_confirmation" => "123456",
-                    "recoveryHash" => "fakeHash123"
-                ],
-                "expectedStatus" => Response::HTTP_OK,
-                "expectedData" => [
-                    "status" => "error",
-                    "http_code" => Response::HTTP_OK,
-                    "message" => "Your password has been successfully changed.",
-                ]
-            ],
-
-            "userInfoSuccessEmailSent" =>
-            [
-                "inputValue" => [
-                    "email" => "johnkennedy@gmail.com",
+                    "recoveryHash" => "JDJ5JDEwJHQubk40aGU3c3pHNWxRbjByRC9UYU9iQWxaZGJSaExGUGJDaUpPanpyTUtBY2FlRi9QdmQy"
                 ],
                 "expectedStatus" => Response::HTTP_OK,
                 "expectedData" => [
                     "status" => "success",
                     "http_code" => Response::HTTP_OK,
-                    "message" => "We've sent an email with instructions to recovery your password."
+                    "message" => "Your password has been successfully changed.",
                 ]
             ]
+
+//            "userInfoSuccessEmailSent" =>
+//            [
+//                "inputValue" => [
+//                    "email" => "jorgesmith@gmail.com",
+//                ],
+//                "expectedStatus" => Response::HTTP_OK,
+//                "expectedData" => [
+//                    "status" => "success",
+//                    "http_code" => Response::HTTP_OK,
+//                    "message" => "We've sent an email with instructions to recovery your password."
+//                ]
+//            ]
         ];
     }
 }

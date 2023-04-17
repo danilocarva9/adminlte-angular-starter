@@ -9,7 +9,7 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 class UserRegistrationTest extends TestCase
 {
     /**
-     * @dataProvider userRegistrationDataProvider 
+     * @dataProvider userRegistrationDataProvider
      */
     public function testIsRegistrationValid($inputValue, $expectedStatus, $expectedData = null)
     {
@@ -58,7 +58,7 @@ class UserRegistrationTest extends TestCase
             [
                 "inputValue" => [
                     "name" => "John Kennedy",
-                    "email" => "johnkennedy@gmail.com",
+                    "email" => "jorgesmith@gmail.com",
                     "password" => "123456",
                     "password_confirmation" => "123456"
                 ],
@@ -71,7 +71,7 @@ class UserRegistrationTest extends TestCase
                     ]
                 ]
             ],
-            
+
             "userPasswordDoesNotMatch" =>
             [
                 "inputValue" => [
@@ -89,7 +89,7 @@ class UserRegistrationTest extends TestCase
                     ]
                 ]
             ]
-           
+
         ];
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 class UserForgotPasswordTest extends TestCase
 {
     /**
-     * @dataProvider userForgotPasswordDataProvider 
+     * @dataProvider userForgotPasswordDataProvider
      */
     public function testIsForgotPasswordValid($inputValue, $expectedStatus, $expectedData = null)
     {
@@ -50,7 +50,7 @@ class UserForgotPasswordTest extends TestCase
             "userInfoSuccessEmailSent" =>
             [
                 "inputValue" => [
-                    "email" => "johnkennedy@gmail.com",
+                    "email" => "jorgesmith@gmail.com",
                 ],
                 "expectedStatus" => Response::HTTP_OK,
                 "expectedData" => [
@@ -59,7 +59,7 @@ class UserForgotPasswordTest extends TestCase
                     "message" => "We've sent an email with instructions to recovery your password."
                 ]
             ]
-           
+
         ];
     }
 }

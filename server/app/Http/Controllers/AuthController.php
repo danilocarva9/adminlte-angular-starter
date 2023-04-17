@@ -14,8 +14,8 @@ use Throwable;
 class AuthController extends Controller
 {
 
-    protected $userService;
-    protected $authService;
+    protected UserService $userService;
+    protected AuthService $authService;
 
     /**
      * Create new controller instance
@@ -71,7 +71,7 @@ class AuthController extends Controller
      */
     public function forgotPassword(ForgotPasswordRequest $request)
     {
-        
+
         $response = $this->authService->forgotPassword($request->get('email'));
         if($response['httpCode'] == Response::HTTP_OK){
             return \ApiResponse::success($response['message']);

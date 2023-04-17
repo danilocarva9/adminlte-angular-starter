@@ -11,7 +11,7 @@ use Throwable;
 class UserController extends Controller
 {
 
-    protected $userService;
+    protected UserService $userService;
 
     /**
      * Create new controller instance
@@ -43,7 +43,7 @@ class UserController extends Controller
         } catch(Throwable $exception) {
             return \ApiResponse::failed($exception);
         }
-       
+
     }
 
 }

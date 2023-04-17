@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 class UserLoginTest extends TestCase
 {
     /**
-     * @dataProvider userLoginDataProvider 
+     * @dataProvider userLoginDataProvider
      */
     public function testIsLoginValid($inputValue, $expectedStatus, $expectedData = null)
     {
@@ -34,11 +34,11 @@ class UserLoginTest extends TestCase
                     ]
                 ]
             ],
-           
+
             "userInfoShouldBeValid" =>
             [
                 "inputValue" => [
-                    "email" => "dante@gmail.com",
+                    "email" => "jorgesmith@gmail.com",
                     "password" => "123456"
                 ],
                 "expectedStatus" => Response::HTTP_OK,
@@ -52,8 +52,8 @@ class UserLoginTest extends TestCase
             "userInfoShouldNotBeValid" =>
             [
                 "inputValue" => [
-                    "email" => "usertofail@gmail.com",
-                    "password" => "123456"
+                    "email" => "jorgesmith@gmail.com",
+                    "password" => "123123"
                 ],
                 "expectedStatus" => Response::HTTP_UNAUTHORIZED,
                 "expectedData" => [

@@ -5,14 +5,13 @@ use App\Models\User;
 use Illuminate\Http\Response;
 use App\Repositories\UserRepository;
 use App\Repositories\ProfileRepository;
-use App\Services\UploadService;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    protected $userRepository;
-    protected $profileRepository;
-    protected $uploadService;
+    protected UserRepository $userRepository;
+    protected ProfileRepository $profileRepository;
+    protected UploadService $uploadService;
 
     public function __construct(
         UserRepository $userRepository,
@@ -25,7 +24,7 @@ class UserService
         $this->uploadService = $uploadService;
     }
 
-    public function find(int $id): Array
+    public function find(int $id): array
     {
         $user = $this->userRepository->findBy([['id', $id]]);
         if(!is_null($user)){
@@ -39,31 +38,36 @@ class UserService
    {
         $request = [
             'name' => $request['name'],
-            'email' => $request['email'], 
+            'email' => $request['email'],
             'password' => Hash::make($request['password'])
         ];
         return $this->userRepository->create($request);
    }
 
-   public function updateUserProfile($request)
+   public function updateUserProfile($request): array
    {
         $user = $this->userRepository->findBy([['id', $request['user_id'], '=']]);
         $user->name = $request['name'];
         $user->save();
 
+        if(!$user->save()){
+           return ['httpCode' => Response::HTTP_INTERNAL_SERVER_ERROR, 'data'=> $user];
+        }
+
         $profile = [
-            'role' => $request['role'], 
+            'role' => $request['role'],
             'description' => $request['description']
         ];
         if(isset($request['picture'])){
             $profile['picture'] = $this->uploadService->uploadPicture($request['picture']);
         }
         $user->profile->fill($profile);
-        $user->profile->save();
 
-        if(!is_null($user)){
-            return ['httpCode' => Response::HTTP_OK, 'data'=> $user];
+        if(!$user->profile->save()){
+            return ['httpCode' => Response::HTTP_INTERNAL_SERVER_ERROR, 'data'=> $user];
         }
+
+        return ['httpCode' => Response::HTTP_OK, 'data'=> $user];
    }
 
 }

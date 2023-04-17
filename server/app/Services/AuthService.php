@@ -67,7 +67,7 @@ class AuthService
         if(is_null($user)) {
             return ["httpCode"=> Response::HTTP_NOT_FOUND, "message" => "User not found."];
         }
-       
+
         $recoveryPassword = [
             'encryption' => Hash::make($user->id),
             'is_active' => true,
@@ -108,7 +108,6 @@ class AuthService
      */
     public function recoveryPassword(array $request): Array
     {
-  
         $recoveryPassword = $this->recoveryPasswordRepository->findBy([
             ['encryption', base64_decode($request['recoveryHash']), '='],
             ['is_active', true ]
@@ -117,7 +116,7 @@ class AuthService
         if(!$recoveryPassword){
             return ["httpCode"=> Response::HTTP_UNPROCESSABLE_ENTITY, "message"=> "No requested recovery password for this user."];
         }
-       
+
         $user = $this->userRepository->updateBy(['password' => Hash::make($request['password'])], $recoveryPassword->user->id);
 
         if(!is_null($user)){
@@ -143,5 +142,5 @@ class AuthService
             'expires_in' => auth()->factory()->getTTL() * 1
         ];
     }
-   
+
 }
