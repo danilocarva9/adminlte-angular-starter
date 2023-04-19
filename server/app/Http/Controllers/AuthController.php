@@ -13,23 +13,15 @@ use Throwable;
 
 class AuthController extends Controller
 {
-
-    protected UserService $userService;
-    protected AuthService $authService;
-
     /**
      * Create new controller instance
      *
      * @return void
      */
     public function __construct(
-        UserService $userService,
-        AuthService $authService
-    )
-    {
-        $this->userService = $userService;
-        $this->authService = $authService;
-    }
+        protected UserService $userService,
+        protected AuthService $authService
+    ) {}
 
     /**
      * Register new user.
