@@ -9,26 +9,16 @@ use App\Services\EmailService;
 
 class AuthService
 {
-
-    private $userRepository;
-    private $recoveryPasswordRepository;
-    private $emailService;
-
      /**
      * Create new service instance
      *
      * @return void
      */
     public function __construct(
-        UserRepository $userRepository,
-        RecoveryPasswordRepository $recoveryPasswordRepository,
-        EmailService $emailService
-    )
-    {
-        $this->userRepository = $userRepository;
-        $this->recoveryPasswordRepository = $recoveryPasswordRepository;
-        $this->emailService = $emailService;
-    }
+        private UserRepository $userRepository,
+        private RecoveryPasswordRepository $recoveryPasswordRepository,
+        private EmailService $emailService
+    ){}
 
    /**
      * Get a JWT via given credentials.
@@ -36,7 +26,7 @@ class AuthService
      * @param  Request  $request
      * @return Response
      */
-    public function login(array $credentials): Array
+    public function login(array $credentials): array
     {
         //Attempt to login checking user info.
         $token = auth()->attempt($credentials);
@@ -59,7 +49,7 @@ class AuthService
      * @param  Request  $request
      * @return Response
      */
-    public function forgotPassword(string $email): Array
+    public function forgotPassword(string $email): array
     {
         $user = $this->userRepository->findBy([['email', $email, '=']]);
 
@@ -91,12 +81,12 @@ class AuthService
     }
 
 
-    private function sendRecoveryPasswordEmail(string $email, $recoveryHash): Array
+    private function sendRecoveryPasswordEmail(string $email, $recoveryHash): array
     {
         $urlRecoveryBase64 = base64_encode($recoveryHash);
         $subject = "Recovery password";
         $body = $urlRecoveryBase64;
-        $this->emailService->handleRequest($email, $subject, $body);
+        $this->emailService->send($email, $subject, $body);
         return ["httpCode"=> Response::HTTP_OK, "message" => "We've sent an email with instructions to recovery your password."];
     }
 

@@ -10,20 +10,12 @@ use Throwable;
 
 class UserController extends Controller
 {
-
-    protected UserService $userService;
-
     /**
      * Create new controller instance
      *
      * @return void
      */
-    public function __construct(
-        UserService $userService
-    )
-    {
-        $this->userService = $userService;
-    }
+    public function __construct(protected UserService $userService){}
 
     public function findById(Request $request, int $id)
     {

@@ -69,7 +69,7 @@ $app->configure('app');
 $app->configure('cors');
 $app->configure('mail');
 
-//Register JWT 
+//Register JWT
 //$app->configure('jwt');
 //$app->configure('auth');
 
@@ -113,7 +113,8 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Fruitcake\Cors\CorsServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(App\Providers\ApiResponseServiceProvider::class);
-$app->register(Illuminate\Mail\MailServiceProvider::class);
+//$app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(\App\Providers\MailServiceProvider::class);
 
 
 /*

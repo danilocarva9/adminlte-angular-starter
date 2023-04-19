@@ -5,7 +5,13 @@ use App\Jobs\SendEmailJob;
 
 class EmailService
 {
-    public function handleRequest(string $email, string $subject, string $body)
+
+
+    public function __construct(SendEmailJob $mailService)
+    {
+    }
+
+    public function send(string $email, string $subject, string $body): void
     {
         $emailComposition = [
             'to' => $email,
@@ -13,7 +19,8 @@ class EmailService
             'body' => $body
         ];
 
-        $job = (new SendEmailJob($emailComposition));
+        $job = app()->make(SendEmailJob::class, $emailComposition);
         dispatch($job);
     }
+
 }
